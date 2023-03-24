@@ -1,9 +1,10 @@
+import './telemetry/tracing';
+
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  require('./telemetry/tracing');
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
