@@ -1,73 +1,151 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Instrumented NodeJS Application
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This NodeJS application built using the NestJS framework has been instrumented
+with OpenTelemetry and integrated with Zipkin and Prometheus for trace and
+metrics visualization, respectively.
 
-## Description
+## Running the App
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+To run this project you will need to have Docker installed and running on your
+system.
 
-## Installation
+### VS Code Dev Containers
 
-```bash
-$ npm install
+The work for this project was done in a VS Code Dev Container. 
+
+Download and install VS Code and the VS Code Dev Containers extension, both
+from Microsoft.
+
+- [VS Code Editor](https://code.visualstudio.com)
+- [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+Open this project in VS Code then type `cmd + shift + p` (mac) or `ctrl + shift + p`
+(windows/linux) and type/select from the menu: `Dev Containers: Rebuild and Reopen in Dev Container`.
+
+Completing the above steps will download and install the containers required
+to run the NodeJS application and Prometheus and ZipKin.
+
+Once the project has re-opened, type `cmd + ~` (mac) or `ctrl + ~` (windows/linux)
+to open the terminal. The terminal will open inside the app container in the
+application's working directory.
+
+Run the following commands to start the NodeJS application:
+
+```
+npm install
+npm run build
+npm start:prod
 ```
 
-## Running the app
+Prometheus and ZipKin will already be running.
 
-```bash
-# development
-$ npm run start
+Learn more about Dev Containers in this article on
+[Developing inside a Container](https://code.visualstudio.com/docs/devcontainers/containers).
 
-# watch mode
-$ npm run start:dev
+### Docker (Alternative Instructions)
 
-# production mode
-$ npm run start:prod
+```
+docker-compose -f ./devcontainer/docker-compose.yml up
 ```
 
-## Test
+Once the containers are up, ssh into the app container.
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```
+docker-compose -f ./devcontainer/docker-compose.yml exec app /bin/bash
 ```
 
-## Support
+Change into the project directory, install dependencies, build, then run
+the app.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+cd /workspaces/todo-list
+npm install
+npm run build
+npm run start:prod
+```
 
-## Stay in touch
+## Access the NodeJS Application, Traces, and Metrics
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Visit the following sites in your web browsers:
 
-## License
+<table>
+  <thead>
+    <tr>
+      <th>App</th>
+      <th>URL</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NodeJS App</td>
+      <td>
+        <a href="http://localhost:3000">
+          http://localhost:3000
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>Zipkin</td>
+      <td>
+        <a href="http://localhost:9411/">
+          http://localhost:9411/
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>Prometheus</td>
+      <td>
+        <a href="http://localhost:9090">
+          http://localhost:9090
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-Nest is [MIT licensed](LICENSE).
+## Use the NodeJS Application
+
+Use the following commands to exercise the NodeJS application from the terminal.
+
+### Get tasks
+
+```
+curl http://localhost:3000/tasks
+```
+
+### Create task
+
+In the example below, replace "your description" with a description of your
+choosing.
+
+```
+curl http://localhost:3000/tasks -X POST \
+  -d '{"description": "your description"}' \
+  -H 'Content-Type: application/json'
+```
+
+### Get task
+
+In the example below, replace "1" with an id of an existing task.
+
+```
+curl http://localhost:3000/tasks/1
+```
+
+### Update task
+
+In the example below, replace "1" with an id of an existing task.
+You can an update the description and/or status.
+
+```
+curl http://localhost:3000/tasks/1 -X PATCH \
+  -d '{"status": "DONE"}' \
+  -H 'Content-Type: application/json'
+```
+
+### Delete task
+
+```
+curl http://localhost:3000/tasks/1 -X DELETE
+```
