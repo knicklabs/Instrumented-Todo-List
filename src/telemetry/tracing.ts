@@ -4,6 +4,8 @@ import {
   NodeTracerProvider,
   SimpleSpanProcessor,
   ConsoleSpanExporter,
+  ParentBasedSampler,
+  TraceIdRatioBasedSampler,
 } from '@opentelemetry/sdk-trace-node';
 import {
   MeterProvider,
@@ -31,6 +33,9 @@ const provider = new NodeTracerProvider({
   resource: new Resource({
     [SemanticResourceAttributes.SERVICE_NAME]: 'todo-list',
   }),
+  sampler: new ParentBasedSampler({
+    root: new TraceIdRatioBasedSampler(0.5),
+  }),
 });
 
 registerInstrumentations({
@@ -44,7 +49,7 @@ registerInstrumentations({
 });
 
 provider.addSpanProcessor(new SimpleSpanProcessor(exporter));
-provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
+//provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
 provider.register();
 
 const metricExporter = new OTLPMetricExporter({
