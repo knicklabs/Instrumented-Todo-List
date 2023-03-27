@@ -252,3 +252,95 @@ framework built on top of Express. It is a simple application that was built
 to experiment with integrating opentelemetry for collecting traces and metrics,
 as well as piping the trace and metric logs visualization platforms.
 
+The todo list API has too modules:
+
+1. The App Module handles the `GET /` request displaying a page with instructions
+   on how to use the API.
+2. The Tasks Module handles the resful resources for the `/tasks` endpoint.
+
+The restful resources are as follows:
+
+- GET /tasks - get all tasks
+- POST /tasks - create a task
+- GET /tasks/:id - get a task by its id
+- PATCH /tasks/:id - update a task by its id
+- DELETE /tasks/:id - delete a task by its id
+
+The above endpoints return JSON, escept the DELETE endpoints which has an
+empty response. The POST and PATCH endpoints accept a JSON request body with
+the data to use for creating and updating.
+
+The tasks module can be found in `/src/tasks` and it includes:
+
+- A controller for handling requests to the defined endpoints.
+- A service that uses an injected repository to read and write from the
+  database.
+- Create and Update data transfer objects which define the shape of the
+  request body that can be used to create and update tasks, respectively.
+- A task entity which models a task and maps it to a database table.
+
+The todo list API uses a Postgresql database for storing tasks. The database
+is automigrated, which means that the database migrations are automatically
+generated based on the definition in entities (in this case 
+`src/tasks/entities/task.entity.ts`).
+
+A dev container, which uses Docker, was used for the todo list api (defined
+as app) and the database (defined as db). Moreover, the opentelemetry collector,
+the zipkin trace logger, and the prometheus metric system are also bundled in
+the dev container, managed by Docker. Anyone who wants to try this project out
+need only open the dev container in VS Code and the images will be downloaded
+and containers provisioned for a complete working system.
+
+The telemetry integration is defined in `src/telemetry/tracing`. This file
+defines a Tracer provider and a meter provider that will are used to
+instrument the todo list API and database and collect traces and metrics
+sending them to the running opentelemetry collector service. The opentelemetry
+collector services forwards traces to Zipkin via an API endpoint 
+exposed via port 9411 (and configured in `.devcontainer/collector.config`).
+The Prometheus service polls the running todo list API on port `3000` at the `/metrics`
+endpoint to ingest the exposed application metrics. This is configured in
+`.devcontainer/prometheus.yml`.
+
+The telemetry integration is imported into `src/main.ts` which is the main
+application entry. Note that the telemetry integration uses auto-instrumentation,
+which means that instead of manually having to define spans for traces, that
+the traces will be automatically collected. It uses the HTTP instrumentation
+for HTTP services, which is extended by the Express instrumentation for Express-
+based applications, which is further extended by the Nest instrumentation for
+Nest/Express-based applications. It also uses the PG instrumentation to
+automatically collect spans in the database layer.
+
+Critically, the telemetry integration is imported first in the `src/main.ts`
+before other imports and before the todo list API server is created and
+started. This is necessary in order for it to patch the loaded HTTP,
+Express, Nest, and PG modules before they are used.
+
+One final note is that the traces are also sent to the terminal, which was done
+to aid with debugging during setup and configuration.
+
+By examinging the visualizations included in this README file, it can be visualized
+how an action flows through the Todo list API and database. 
+
+![Screenshot](./visualizations/get-todo.png)
+
+In the above visualization it can be seen that it takes 27.944ms to get a response
+from a request to get a task from the todo list API stored in the database. Though,
+it is important to note that this time is inflated because the instrumentation itself
+adds to the response time.
+
+It can also be seen how the request flows through the system, passing through
+several layers of middleware before reaching the request handler in the controller
+in the tasks module. That controller invokes the findOne method int the service
+in the tasks module. And finally the service performs a database operation. 
+The visualization highlights that findOne operation is the bottleneck in 
+the action, accounting for the majority of the response time. And within that,
+the majority of the time is spent on establishing a database connection. It
+may be possible to optimize that with database connection pooling.
+
+![Screenshot](./visualizations/metric-gc)
+
+The metrics collected into Prometheus can also provide a great deal of
+insight into the running todo list API and database. For example, the
+visualization above shows how the NodeJS garbage collector can be monitored.
+Such a graph could help in identify memory leaks which could result in
+system instability.
