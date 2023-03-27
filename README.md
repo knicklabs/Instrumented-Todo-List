@@ -247,3 +247,8 @@ Below are screenshots of metrics collected.
 
 ## Report
 
+This todo list API was built in TypeScript with NestJS -- a backend NodeJS
+framework built on top of Express. It is a simple application that was built
+to experiment with integrating opentelemetry for collecting traces and metrics,
+as well as piping the trace and metric logs visualization platforms.
+
