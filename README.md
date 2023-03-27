@@ -225,3 +225,13 @@ $ curl http://localhost:3000/tasks/6
 Note: in the list of results, the error is displayed with a red bar line.
 
 ![Screenshot](./visualizations/trace_error.png)
+
+## Example Metrics
+
+Below are screenshots of metrics collected.
+
+![Screenshot](./visualizations/metric_heap_bytes.png)
+
+![Screenshot](./visualizations/metric_gc.png)
+
+![Screenshot](./visualizations/metric_ev.png)
