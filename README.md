@@ -1,9 +1,18 @@
-
 # Instrumented NodeJS Application
 
 This NodeJS application built using the NestJS framework has been instrumented
 with OpenTelemetry and integrated with Zipkin and Prometheus for trace and
 metrics visualization, respectively.
+
+## Table of Contents
+
+- [Instrumented NodeJS Application](#instrumented-nodejs-application)
+- [Running the App](#running-the-app)
+- [Access the NodeJS Application, Traces, and Metrics](#access-the-nodejs-application-traces-and-metrics)
+- [Use the NodeJS Application](#use-the-nodejs-application)
+- [Example Usage with Traces](#example-usage-with-traces)
+- [Example Metrics](#example-metrics)
+- [Report](#report)
 
 ## Running the App
 
@@ -235,3 +244,6 @@ Below are screenshots of metrics collected.
 ![Screenshot](./visualizations/metric_gc.png)
 
 ![Screenshot](./visualizations/metric_ev.png)
+
+## Report
+
