@@ -21,6 +21,11 @@ import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core'
 import { PgInstrumentation } from '@opentelemetry/instrumentation-pg';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 
+import {
+  ParentBasedSampler,
+  TraceIdRatioBasedSampler,
+} from '@opentelemetry/sdk-trace-node';
+
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
 
 const exporter = new OTLPTraceExporter({
@@ -30,6 +35,10 @@ const exporter = new OTLPTraceExporter({
 const provider = new NodeTracerProvider({
   resource: new Resource({
     [SemanticResourceAttributes.SERVICE_NAME]: 'todo-list',
+  }),
+  sampler: new ParentBasedSampler({
+    // 0.5 == 50% of traces
+    root: new TraceIdRatioBasedSampler(0.5),
   }),
 });
 
