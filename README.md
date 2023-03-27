@@ -337,7 +337,7 @@ the action, accounting for the majority of the response time. And within that,
 the majority of the time is spent on establishing a database connection. It
 may be possible to optimize that with database connection pooling.
 
-![Screenshot](./visualizations/metric-gc)
+![Screenshot](./visualizations/metric-gc.png)
 
 The metrics collected into Prometheus can also provide a great deal of
 insight into the running todo list API and database. For example, the
