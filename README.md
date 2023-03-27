@@ -149,3 +149,79 @@ curl http://localhost:3000/tasks/1 -X PATCH \
 ```
 curl http://localhost:3000/tasks/1 -X DELETE
 ```
+
+## Example Usage with Traces
+
+### GET Tasks with Trace
+
+```
+$ curl http://localhost:3000/tasks
+
+[{"id":4,"description":"your descrition","status":"OPEN"},{"id":5,"description":"your description","status":"OPEN"}]
+```
+
+![Screenshot](./visualizations/trace_GET_tasks.png)
+
+### Create Task with Trace
+
+```
+$ curl http://localhost:3000/tasks -X POST \
+  -d '{"description": "Pick up stuff at the store"}' \
+  -H 'Content-Type: application/json'
+
+{"description":"Pick up stuff at the store","status":"OPEN","id":6}
+```
+
+![Screenshot](./visualizations/trace_POST_tasks.png)
+
+### Get Task with Trace
+
+```
+$ curl http://localhost:3000/tasks/6
+
+{"id":6,"description":"Pick up stuff at the store","status":"OPEN"}
+```
+
+![Screenshot](./visualizations/trace_GET_TASK.png)
+
+### Patch Task with Trace
+
+```
+$ curl http://localhost:3000/tasks/6 -X PATCH \
+  -d '{"status": "DONE"}' \
+  -H 'Content-Type: application/json'
+
+{"id":6,"description":"Pick up stuff at the store","status":"DONE"}
+```
+
+![Screenshot](./visualizations/trace_PATCH_task.png)
+
+As an example of what other information can be gathered from the trace logs,
+here is a screenshot with the PG query span selected. The database query that
+was exected can be seen (`UPDATE "task" SET "status" = $1 WHERE "id" IN ($2)`).
+
+![Screenshot](./visualizations/trace_PATCH_task_db.png)
+
+### Delete Task with Trace
+
+```
+$ curl http://localhost:3000/tasks/6 -X DELETE
+```
+
+![Screenshot](./visualizations/trace_DELETE_task.png)
+
+### Get Tasks with Error and Trace
+
+To demonstrate that the last operation worked and to trace an error.
+
+```
+$ curl http://localhost:3000/tasks/6
+
+{"statusCode":404,"message":"Task #6 not found","error":"Not Found"}
+```
+
+![Screenshot](./visualizations/trace_DELETE_task_error.png)
+
+Note: in the list of results, the error is displayed with a red bar line.
+
+![Screenshot](./visualizations/trace_error.png)
